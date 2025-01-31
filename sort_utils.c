@@ -5,13 +5,15 @@ void	index_stack(t_stack *a)
 	t_node	*current;
 	t_node	*min;
 	int		index;
+	int		i;
 
 	index = 0;
 	while (index < a->size)
 	{
-		current = a->head;
 		min = NULL;
-		while (!min || min->index != -1)
+		current = a->head;
+		i = -1;
+		while (++i < a->size)
 		{
 			if (current->index == -1 && (!min || current->value < min->value))
 				min = current;
@@ -41,15 +43,12 @@ t_node	*find_min(t_stack *s)
 
 int	get_max_bits(t_stack *s)
 {
-	int	max;
+	int	max_num;
 	int	bits;
 
-	max = s->size - 1;
+	max_num = s->size - 1;
 	bits = 0;
-	while (max > 0)
-	{
-		max >>= 1;
+	while ((max_num >> bits) != 0)
 		bits++;
-	}
 	return (bits);
 }

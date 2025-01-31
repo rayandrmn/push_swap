@@ -24,15 +24,26 @@ void	sort_three(t_stack *a)
 	int	second;
 	int	third;
 
-	first = a->head->index;
-	second = a->head->next->index;
-	third = a->head->prev->index;
-	if ((first > second && second < third && first < third)
-		|| (first > second && second > third)
-		|| (first < second && second > third && first < third))
-		swap(a, "sa");
-	if (!is_sorted(a))
-		reverse_rotate(a, "rra");
+	first = a->head->value;
+	second = a->head->next->value;
+	third = a->head->prev->value;
+
+	if (first > second && second < third && first < third)
+		swap(a, "sa\n");
+	else if (first > second && second > third)
+	{
+		swap(a, "sa\n");
+		reverse_rotate(a, "rra\n");
+	}
+	else if (first > second && second < third)
+		rotate(a, "ra\n");
+	else if (first < second && second > third && first < third)
+	{
+		reverse_rotate(a, "rra\n");
+		swap(a, "sa\n");
+	}
+	else if (first < second && second > third)
+		reverse_rotate(a, "rra\n");
 }
 
 void	radix_sort(t_stack *a, t_stack *b)
@@ -40,6 +51,7 @@ void	radix_sort(t_stack *a, t_stack *b)
 	int	max_bits;
 	int	i;
 	int	j;
+	int	num;
 
 	max_bits = get_max_bits(a);
 	i = -1;
@@ -48,36 +60,31 @@ void	radix_sort(t_stack *a, t_stack *b)
 		j = -1;
 		while (++j < a->size)
 		{
-			if ((a->head->index >> i) & 1)
-				rotate(a, "ra");
+			num = a->head->index;
+			if ((num >> i) & 1)
+				rotate(a, "ra\n");
 			else
-				push(a, b, "pb");
+				push(a, b, "pb\n");
 		}
 		while (b->size > 0)
-			push(b, a, "pa");
+			push(b, a, "pa\n");
 	}
 }
 
 void	sort_five(t_stack *a, t_stack *b)
 {
-	int	pushed;
-
-	pushed = 0;
-	while (a->size > 3 && pushed < 2)
+	while (a->size > 3)
 	{
 		if (a->head->index == 0 || a->head->index == 1)
-		{
-			push(a, b, "pb");
-			pushed++;
-		}
+			push(a, b, "pb\n");
 		else
-			rotate(a, "ra");
+			rotate(a, "ra\n");
 	}
 	sort_three(a);
 	while (b->size > 0)
 	{
-		push(b, a, "pa");
-		if (a->head->index == 1)
-			swap(a, "sa");
+		push(b, a, "pa\n");
+		if (a->head->value > a->head->next->value)
+			swap(a, "sa\n");
 	}
 }
