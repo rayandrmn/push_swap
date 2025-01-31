@@ -55,4 +55,6 @@ size_t	ft_strlen(const char *s);
 void	sort_five(t_stack *a, t_stack *b);
 void	reverse_rotate(t_stack *s, char *op);
 void	rotate(t_stack *s, char *op);
+void	optimized_radix(t_stack *a, t_stack *b);
+void	sort_chunks(t_stack *a, t_stack *b);
 #endif

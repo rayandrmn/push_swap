@@ -46,11 +46,12 @@ void	sort_three(t_stack *a)
 		reverse_rotate(a, "rra\n");
 }
 
-void	radix_sort(t_stack *a, t_stack *b)
+void	optimized_radix(t_stack *a, t_stack *b)
 {
 	int	max_bits;
 	int	i;
 	int	j;
+	int	size;
 	int	num;
 
 	max_bits = get_max_bits(a);
@@ -58,7 +59,8 @@ void	radix_sort(t_stack *a, t_stack *b)
 	while (++i < max_bits)
 	{
 		j = -1;
-		while (++j < a->size)
+		size = a->size;
+		while (++j < size)
 		{
 			num = a->head->index;
 			if ((num >> i) & 1)
@@ -71,20 +73,30 @@ void	radix_sort(t_stack *a, t_stack *b)
 	}
 }
 
-void	sort_five(t_stack *a, t_stack *b)
+void	sort_chunks(t_stack *a, t_stack *b)
 {
-	while (a->size > 3)
+	int	chunk_size;
+	int	total_chunks;
+	int	current_chunk;
+
+	chunk_size = 15 + (a->size / 100);
+	total_chunks = (a->size / chunk_size) + 1;
+	current_chunk = 0;
+	while (current_chunk < total_chunks)
 	{
-		if (a->head->index == 0 || a->head->index == 1)
-			push(a, b, "pb\n");
-		else
-			rotate(a, "ra\n");
+		push_chunk(a, b, current_chunk * chunk_size, (current_chunk + 1) * chunk_size);
+		current_chunk++;
 	}
-	sort_three(a);
 	while (b->size > 0)
-	{
-		push(b, a, "pa\n");
-		if (a->head->value > a->head->next->value)
-			swap(a, "sa\n");
-	}
+		smart_rotate_and_push(a, b);
+}
+
+void	sort_stack(t_stack *a, t_stack *b)
+{
+	if (a->size <= 5)
+		sort_small(a, b);
+	else if (a->size <= 150)
+		optimized_radix(a, b);
+	else
+		sort_chunks(a, b);
 }
